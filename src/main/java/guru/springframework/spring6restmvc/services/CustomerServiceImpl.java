@@ -57,4 +57,20 @@ public class CustomerServiceImpl implements CustomerService {
 
     return Optional.ofNullable(customerMap.get(id));
   }
+
+  @Override
+  public CustomerDTO saveNewCustomer(CustomerDTO customer) {
+
+    CustomerDTO saveCustomer = CustomerDTO.builder()
+        .id(customer.getId())
+        .version(1)
+        .name(customer.getName())
+        .createdDate(LocalDateTime.now())
+        .updateDate(LocalDateTime.now())
+        .build();
+
+    customerMap.put(saveCustomer.getId(), saveCustomer);
+
+    return saveCustomer;
+  }
 }

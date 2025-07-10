@@ -85,8 +85,8 @@ public class BeerControllerIT {
     assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
     assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
 
-    String[] locaitonUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
-    UUID savedUUID = UUID.fromString(locaitonUUID[4]);
+    String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+    UUID savedUUID = UUID.fromString(locationUUID[4]);
 
     Beer beer = beerRepository.findById(savedUUID).get();
     assertThat(beer).isNotNull();

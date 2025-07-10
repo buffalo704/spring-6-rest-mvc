@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Primary
 @RequiredArgsConstructor
+
 public class CustomerServiceJPA implements CustomerService {
   private final CustomerRepository customerRepository;
   private final CustomerMapper customerMapper;
@@ -31,5 +32,11 @@ public class CustomerServiceJPA implements CustomerService {
         .stream()
         .map(customerMapper::customerToCustomerDto)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public CustomerDTO saveNewCustomer(CustomerDTO customer) {
+    return customerMapper
+        .customerToCustomerDto(customerRepository.save(customerMapper.customerDtoToCustomer(customer)));
   }
 }

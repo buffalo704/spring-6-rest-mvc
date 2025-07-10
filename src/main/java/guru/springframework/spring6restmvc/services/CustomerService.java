@@ -10,4 +10,6 @@ public interface CustomerService {
   List<CustomerDTO> listCustomers();
 
   Optional<CustomerDTO> getCustomerById(UUID id);
+
+  CustomerDTO saveNewCustomer(CustomerDTO customer);
 }

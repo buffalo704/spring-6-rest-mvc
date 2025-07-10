@@ -6,12 +6,16 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import guru.springframework.spring6restmvc.entities.Customer;
 
 import guru.springframework.spring6restmvc.model.CustomerDTO;
 import guru.springframework.spring6restmvc.repositories.CustomerRepository;
+import guru.springframework.spring6restmvc.mappers.CustomerMapper;
 import jakarta.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +28,29 @@ public class CustomerControllerIT {
 
   @Autowired
   CustomerRepository customerRepository;
+
+  @Autowired
+  CustomerMapper customerMapper;
+
+  @Rollback
+  @Transactional
+  @Test
+  void testSaveNewCustomer() {
+    CustomerDTO customerDTO = CustomerDTO.builder()
+        .name("New Customer")
+        .build();
+
+    ResponseEntity responseEntity = customerController.handlePost(customerDTO);
+
+    assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+    assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+
+    String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+    UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+    Customer customer = customerRepository.findById(savedUUID).get();
+    assertThat(customer).isNotNull();
+  }
 
   @Test
   void testCustomerIdNotFound() {

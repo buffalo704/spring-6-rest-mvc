@@ -60,10 +60,10 @@ public class BeerControllerTest {
     beerMap.put("beerName", "New Name");
 
     mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(beerMap)))
-            .andExpect(status().isNoContent());
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(beerMap)))
+        .andExpect(status().isNoContent());
 
     verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
 
@@ -75,9 +75,11 @@ public class BeerControllerTest {
   void testDeleteBeer() throws Exception {
     BeerDTO beer = beerServiceImpl.listBeers().get(0);
 
+    given(beerService.deleteById(any())).willReturn(true);
+
     mockMvc.perform(delete(BeerController.BEER_PATH_ID, beer.getId())
-                    .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNoContent());
 
     verify(beerService).deleteById(uuidArgumentCaptor.capture());
 
@@ -88,11 +90,13 @@ public class BeerControllerTest {
   void testUpdateBeer() throws Exception {
     BeerDTO beer = beerServiceImpl.listBeers().get(0);
 
+    given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
+
     mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(beer)))
-            .andExpect(status().isNoContent());
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(beer)))
+        .andExpect(status().isNoContent());
 
     verify(beerService).updateBeerById(any(UUID.class), any(BeerDTO.class));
   }
@@ -106,11 +110,11 @@ public class BeerControllerTest {
     given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
 
     mockMvc.perform(post(BeerController.BEER_PATH)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(beer)))
-            .andExpect(status().isCreated())
-            .andExpect(header().exists("Location"));
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(beer)))
+        .andExpect(status().isCreated())
+        .andExpect(header().exists("Location"));
   }
 
   @Test
@@ -118,10 +122,10 @@ public class BeerControllerTest {
     given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
 
     mockMvc.perform(get(BeerController.BEER_PATH)
-                    .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.length()", is(3)));
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.length()", is(3)));
   }
 
   @Test
@@ -130,7 +134,7 @@ public class BeerControllerTest {
     given(beerService.getBeerById(any(UUID.class))).willReturn(Optional.empty());
 
     mockMvc.perform(get(BeerController.BEER_PATH_ID, UUID.randomUUID()))
-            .andExpect(status().isNotFound());
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -140,10 +144,10 @@ public class BeerControllerTest {
     given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 
     mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
-                    .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
-            .andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
+        .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
+        .andExpect(jsonPath("$.beerName", is(testBeer.getBeerName())));
   }
 }

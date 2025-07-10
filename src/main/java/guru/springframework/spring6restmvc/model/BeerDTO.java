@@ -2,12 +2,14 @@ package guru.springframework.spring6restmvc.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
+@Getter
 @Data
 public class BeerDTO {
   private UUID id;

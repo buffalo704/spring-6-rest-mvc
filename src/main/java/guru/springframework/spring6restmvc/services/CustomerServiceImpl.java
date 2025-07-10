@@ -17,32 +17,32 @@ public class CustomerServiceImpl implements CustomerService {
     this.customerMap = new HashMap<>();
 
     CustomerDTO customer1 = CustomerDTO.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .name("John Doe")
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
-            .build();
+        .id(UUID.randomUUID())
+        .version(1)
+        .name("John Doe")
+        .createdDate(LocalDateTime.now())
+        .updateDate(LocalDateTime.now())
+        .build();
 
     CustomerDTO customer2 = CustomerDTO.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .name("Jane Smith")
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
-            .build();
+        .id(UUID.randomUUID())
+        .version(1)
+        .name("Jane Smith")
+        .createdDate(LocalDateTime.now())
+        .updateDate(LocalDateTime.now())
+        .build();
 
     CustomerDTO customer3 = CustomerDTO.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .name("Alice Johnson")
-            .createdDate(LocalDateTime.now())
-            .updateDate(LocalDateTime.now())
-            .build();
+        .id(UUID.randomUUID())
+        .version(1)
+        .name("Alice Johnson")
+        .createdDate(LocalDateTime.now())
+        .updateDate(LocalDateTime.now())
+        .build();
 
-    customerMap.put(customer1.getId(),customer1);
-    customerMap.put(customer2.getId(),customer2);
-    customerMap.put(customer3.getId(),customer3);
+    customerMap.put(customer1.getId(), customer1);
+    customerMap.put(customer2.getId(), customer2);
+    customerMap.put(customer3.getId(), customer3);
   }
 
   @Override
@@ -51,10 +51,10 @@ public class CustomerServiceImpl implements CustomerService {
   }
 
   @Override
-  public CustomerDTO getCustomerById(UUID id) {
+  public Optional<CustomerDTO> getCustomerById(UUID id) {
 
     log.debug("Get Customer by Id - in service. Id: " + id.toString());
 
-    return customerMap.get(id);
+    return Optional.ofNullable(customerMap.get(id));
   }
 }

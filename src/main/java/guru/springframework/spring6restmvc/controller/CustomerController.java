@@ -30,6 +30,6 @@ public class CustomerController {
   public CustomerDTO getCustomerById(@PathVariable("customerId") UUID customerId) {
     log.debug("Get customer by id - in controller: {}", customerId);
 
-    return customerService.getCustomerById(customerId);
+    return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
   }
 }

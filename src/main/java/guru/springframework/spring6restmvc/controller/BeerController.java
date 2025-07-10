@@ -32,24 +32,25 @@ public class BeerController {
   @DeleteMapping(BEER_PATH_ID)
   public ResponseEntity deleteBeer(@PathVariable("beerId") UUID beerId) {
 
-    log.debug("Delete beer by id - in controller: {}", beerId);
-
-    beerService.deleteById(beerId);
+    if (!beerService.deleteById(beerId)) {
+      throw new NotFoundException();
+    }
 
     return new ResponseEntity(HttpStatus.NO_CONTENT);
   }
 
-
   @PutMapping(BEER_PATH_ID)
   public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer) {
 
-    beerService.updateBeerById(beerId, beer);
+    if (beerService.updateBeerById(beerId, beer).isEmpty()) {
+      throw new NotFoundException();
+    }
 
     return new ResponseEntity(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping(BEER_PATH)
-  //@RequestMapping(method = RequestMethod.POST)
+  // @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity handlePost(@RequestBody BeerDTO beer) {
     log.debug("Handle post - in controller: {}", beer);
 
@@ -68,7 +69,7 @@ public class BeerController {
     return beerService.listBeers();
   }
 
-  @GetMapping(value=BEER_PATH_ID)
+  @GetMapping(value = BEER_PATH_ID)
   public BeerDTO getBeerById(@PathVariable("beerId") UUID beerId) {
     log.debug("Get beer by id - in controller: {}", beerId);
 
